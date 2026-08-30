@@ -1,0 +1,36 @@
+{
+  "name": "@oo-ld/oold-js",
+  "version": "0.1.0",
+  "description": "Reference JavaScript validator for OO-LD schemas",
+  "type": "module",
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OO-LD/oold-js.git"
+  },
+  "bin": {
+    "oold-validate": "src/validate.mjs"
+  },
+  "exports": {
+    ".": "./src/validate.mjs",
+    "./frame": "./src/schema_to_frame.mjs",
+    "./pattern-lint": "./src/pattern_lint.mjs"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "validate": "node src/validate.mjs"
+  },
+  "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^11.0.0",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^3.0.1",
+    "ajv-formats-draft2019": "^1.6.1",
+    "json-schema-faker": "0.6.2",
+    "jsonld": "^8.3.2"
+  }
+}

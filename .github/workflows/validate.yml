@@ -1,0 +1,23 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: OO-LD/oold-schema
+          path: oold-schema
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      # The corpus and the meta-schemas both come from oold-schema: this package validates that
+      # specification and vendors nothing from it, so a run needs a checkout of it to mean anything.
+      - run: node src/validate.mjs oold-schema/examples --meta oold-schema/meta
