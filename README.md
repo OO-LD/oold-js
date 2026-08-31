@@ -35,11 +35,15 @@ Exit status is non-zero when any check fails.
 | Compliance | the `examples/compliance` fixtures, where present |
 | Coverage | every `x-oold-*` keyword has a fixture; every machine-checkable rule has one |
 
-## Relationship to oold-python
+## Maintenance
 
-`oold-python` is the maintained implementation: it validates `oold-schema` in CI, ships the meta-schema version history, and is where new checks land. This package is frozen apart from fixes that keep the two in agreement.
+This package is **conformance-maintained**. It pins a specification tag, runs the conformance suite, and keeps passing it. Nothing else: no feature work, no API surface, no npm release unless someone asks for one.
 
-`oold-python`'s parity suite runs both over the same corpus and requires the same verdict. A disagreement is a bug in one of them, and the suite does not say which.
+`oold-python` is the maintained implementation - it validates `oold-schema` in CI, ships the meta-schema version history, and is where new checks land. A check arrives here only when the conformance suite requires it.
+
+A divergence from `oold-python` is a bug in this repository and is fixed, not recorded. That is the whole point: the reason to keep a second implementation is not redundancy, it is that when two implementations built from the same prose disagree, the usual cause is that the prose is ambiguous. That is a finding about the specification, and it only surfaces if divergences are investigated rather than allowed to accumulate.
+
+`oold-python`'s parity suite runs both over the same corpus and requires the same verdict. It does not say which side is wrong.
 
 ## Licence
 
