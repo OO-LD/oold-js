@@ -23,7 +23,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "validate": "node src/validate.mjs"
+    "validate": "node src/validate.mjs",
+    "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^11.0.0",
