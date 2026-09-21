@@ -60,6 +60,19 @@ test('embedding wins where a property carries both signals', () => {
   assert.ok(!referenceProperties(organization).includes('address'));
 });
 
+test('a bare @reverse term is reference-valued', () => {
+  // A reverse term's values are node references by definition (JSON-LD 1.1 4.1.10), so
+  // "@type": "@id" beside it is redundant. The specification's own worked example writes
+  // both, which is why keying only on @type passed every fixture while missing the
+  // idiomatic spelling and embedding the targets.
+  const schema = {
+    '@context': { employees: { '@reverse': 'schema:worksFor' } },
+    properties: { employees: { type: 'array', items: { type: 'string' } } },
+  };
+  assert.deepEqual(referenceProperties(schema), ['employees']);
+  assert.deepEqual(schemaToFrame(schema).employees, { '@embed': '@never' });
+});
+
 test('a keyword alias never gets a subframe', () => {
   // `id` names the node, it is not a predicate. It carries an IRI format, so the reference
   // signals match, but a subframe there writes { "@id": {...} }, which a processor rejects.
