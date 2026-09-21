@@ -97,9 +97,13 @@ export function instanceRdfTypes(schema) {
 }
 
 // Properties whose value is a reference, so framing must leave it an IRI rather than
-// pull the referenced node's triples into this document. Three signals, per
-// OOLD-EXT-68fa: an x-oold-range on a string-typed value, an IRI-family format, or a
-// context term mapped "@type": "@id".
+// pull the referenced node's triples into this document. Four signals, per
+// OOLD-EXT-6d10: an x-oold-range on a string-typed value, an IRI-family format, a
+// context term mapped "@type": "@id", or one mapped with @reverse.
+//
+// @reverse stands on its own. A reverse term's values are node references by definition
+// (JSON-LD 1.1 4.1.10), so "@type": "@id" beside it is redundant and authors omit it;
+// keying only on @type would miss the idiomatic spelling and embed the targets.
 //
 // Without this, a referenced node that happens to carry triples in the same graph is
 // embedded as an object, and the framed document no longer validates against the schema
@@ -138,6 +142,9 @@ export function keywordAliasKeys(schema) {
   return found;
 }
 
+const isReferenceTerm = (def) =>
+  !!def && (def["@type"] === "@id" || "@reverse" in def);
+
 export function referenceProperties(schema) {
   const props = collectProps(schema);
   const terms = contextTerms(schema["@context"]);
@@ -158,7 +165,7 @@ export function referenceProperties(schema) {
     (k) =>
       !aliases.has(k) &&
       !isEmbed(props[k]) &&
-      (isReference(props[k]) || terms[k]?.["@type"] === "@id"),
+      (isReference(props[k]) || isReferenceTerm(terms[k])),
   );
 }
 
