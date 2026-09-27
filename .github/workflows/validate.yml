@@ -10,9 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Pinned, not floating: this package's claim is that it passes the conformance
+      # suite of a named specification release. Tracking the default branch would mean
+      # a green run said only that it agreed with whatever landed there this morning.
+      # Bump deliberately when adopting a new release.
       - uses: actions/checkout@v4
         with:
           repository: OO-LD/oold-schema
+          ref: v1.0.0-rc.5
           path: oold-schema
       - uses: actions/setup-node@v4
         with:
