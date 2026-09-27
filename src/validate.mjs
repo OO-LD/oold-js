@@ -535,7 +535,13 @@ for (const f of schemaFiles) {
   try {
     const schema = await dereffed(f);
     const { lost, restored } = await roundtrip(schema, genSamples[f], BASE + f);
-    if (lost.length) { bad(`RT-LOSSY   ${f}: propert${lost.length > 1 ? "ies" : "y"} lost through RDF (unmapped in @context?): ${lost.join(", ")}`); continue; }
+    // A schema with no @context maps nothing, so every declared property is unmapped and
+    // none can be lost: there was never a term to lose it through. Reporting them would
+    // fail a schema for the one thing OOLD-SCH-2d05 says must not fail it, and the real
+    // finding - that a document requires a root @context (OOLD-SCH-96a3) - is the
+    // meta-schema's to make. Matches oold-python, which fixed this in OO-LD/oold-python#141.
+    const hasContext = schema && typeof schema === "object" && "@context" in schema;
+    if (lost.length && hasContext) { bad(`RT-LOSSY   ${f}: propert${lost.length > 1 ? "ies" : "y"} lost through RDF (unmapped in @context?): ${lost.join(", ")}`); continue; }
     const validate = compileValidator(schema);
     if (validate(restored)) ok(`${f}`);
     else bad(`RT-INVALID ${f}: reconstruction fails its schema (shape not preserved by @context?): ` + JSON.stringify(validate.errors));
